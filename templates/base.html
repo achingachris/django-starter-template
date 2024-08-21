@@ -102,14 +102,14 @@
                   <li>
                     <a
                       class="dropdown-item"
-                      href="#"
+                      href="{% url 'password_change' %}"
                       >Change password</a
                     >
                   </li>
                   <li>
                     <a
                       class="dropdown-item"
-                      href="#"
+                      href="{% url 'logout' %}"
                       >Sign out</a
                     >
                   </li>
@@ -121,7 +121,7 @@
           <div class="mr-auto">
             <form class="form d-flex">
               <a
-                href="#"
+                href="{% url 'login' %}"
                 class="btn btn-outline-secondary"
                 >Log in</a
               >
