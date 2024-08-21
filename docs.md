@@ -20,3 +20,9 @@ accounts/password_reset/ [name='password_reset']
 accounts/password_reset/done/ [name='password_reset_done']
 accounts/reset/<uidb64>/<token>/ [name='password_reset_confirm']
 accounts/reset/done/ [name='password_reset_complete']
+
+
+
+templates/registration/password_reset_confirm.html
+templates/registration/password_reset_form.html
+templates/registration/password_reset_done.html
