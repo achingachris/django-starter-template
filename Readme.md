@@ -1,70 +1,134 @@
-## To activate this environment, use
+# Django Starter (with Docker)
 
-    $ conda activate django-docker
+A starter template for Django projects, configured with Docker and Nginx for production.
 
-## To deactivate an active environment, use
+## Conda Environment
 
-    $ conda deactivate
+### Activating the Environment
 
+To activate the environment, run:
 
-## Python Docker images:
+```shell
+conda activate django-docker
+```
 
-https://hub.docker.com/_/python/
+### Deactivating the Environment
 
+To deactivate the environment, run:
 
-## Docker composer file options:
+```shell
+conda deactivate
+```
 
-https://docs.docker.com/reference/compose-file/
+## Docker Setup
 
-## Docker Commands
+### Development Containers
 
-Starting Containers:
+To start development containers, use:
 
-docker-compose up --build  
-docker compose up -d 
+```shell
+docker-compose up --build
+```
 
+Alternatively:
 
-Closing Containers:
+```shell
+docker compose up -d
+```
 
-docker-compose down  
+To stop and remove development containers, use:
 
-View Containers:
-docker image ls 
+```shell
+docker-compose down
+```
 
-Ensure the default Django tables were created:
+To view active Docker images, run:
+
+```shell
+docker image ls
+```
+
+### Database Verification
+
+To ensure default Django tables are created, run:
+
+```shell
 docker-compose exec db psql --username=hello_django --dbname=hello_django_dev
+```
 
+To list tables:
+
+```shell
 \l
+```
+
+To exit the shell:
+
+```shell
 \q
+```
 
-check that the volume was created as well by running:
+## Production Setup
 
+### Starting Production Containers
 
-echo -e "POSTGRES_USER=hello_django\nPOSTGRES_PASSWORD=hello_django\nPOSTGRES_DB=hello_django_prod" >> .env.prod.db
+To start production containers, use:
 
-Docker for Production:
+```shell
 docker-compose -f docker-compose.prod.yml up -d --build
+```
 
-If the container fails to start, check for errors in the logs via docker-compose -f docker-compose.prod.yml logs -f.
+If the container fails to start, check the logs with:
 
-Run production script
+```shell
+docker-compose -f docker-compose.prod.yml logs -f
+```
+
+### Running Production Scripts
+
+Make the production entrypoint script executable:
+
+```shell
 chmod +x app/entrypoint.prod.sh
+```
 
-Docker Poduction:
+### Managing Production Containers
 
-    $ docker-compose -f docker-compose.prod.yml down -v
-    $ docker-compose -f docker-compose.prod.yml up -d --build
-    $ docker-compose -f docker-compose.prod.yml exec web python manage.py migrate --noinput
+To manage production containers, use:
 
-Spin down the development containers:
-
-$ docker-compose down -v
-
-
-$ docker-compose -f docker-compose.prod.yml up -d --build
-$ docker-compose -f docker-compose.prod.yml exec web python manage.py migrate --noinput
-$ docker-compose -f docker-compose.prod.yml exec web python manage.py collectstatic --no-input --clear
-
-
-bring containers down:
+```shell
 docker-compose -f docker-compose.prod.yml down -v
+docker-compose -f docker-compose.prod.yml up -d --build
+docker-compose -f docker-compose.prod.yml exec web python manage.py migrate --noinput
+docker-compose -f docker-compose.prod.yml exec web python manage.py collectstatic --no-input --clear
+```
+
+### Stopping Development Containers
+
+To stop and remove development containers, use:
+
+```shell
+docker-compose down -v
+```
+
+### Stopping Production Containers
+
+To stop and remove production containers, use:
+
+```shell
+docker-compose -f docker-compose.prod.yml down -v
+```
+
+## Docker Resources
+
+**Python Image Used:**
+
+[Python Docker Hub](https://hub.docker.com/_/python/)
+
+```txt
+python:3.12.5-bullseye
+```
+
+**Docker Compose File Options:**
+
+[Docker Compose Documentation](https://docs.docker.com/reference/compose-file/)
