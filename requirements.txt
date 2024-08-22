@@ -1,6 +1,6 @@
 Django==5.1
 django-allauth==64.1.0
-django-debug-toolbar=4.4.6
+django-debug-toolbar==4.4.6
 django-crispy-forms==2.3
 crispy-bootstrap5==2024.2
 whitenoise==6.7.0
