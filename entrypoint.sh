@@ -1,10 +1,9 @@
 #!/bin/sh
-
 if [ "$DATABASE" = "postgres" ]
 then
     echo "Waiting for postgres..."
 
-    while ! nc -z $SQL_HOST $SQL_PORT; do
+    while ! pg_isready -h $SQL_HOST -p $SQL_PORT -U $SQL_USER; do
       sleep 0.1
     done
 

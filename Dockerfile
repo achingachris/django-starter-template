@@ -1,28 +1,30 @@
-# pull official base image
+# Use the official Python image as a base
 FROM python:3.12.5-bullseye
 
-# set work directory
-WORKDIR /usr/src/app
-
-# set environment variables
+# Set environment variables to avoid .pyc files and ensure stdout and stderr are unbuffered
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
 
-# install system dependencies
-RUN apt-get update && apt-get install -y netcat
+# Set the working directory
+WORKDIR /usr/src/app
 
-# install dependencies
+# Install system dependencies
+RUN apt-get update && apt-get install -y \
+    netcat \
+    postgresql-client
+
+# Upgrade pip and install Python dependencies
 RUN pip install --upgrade pip
-COPY ./requirements.txt .
+COPY requirements.txt .
 RUN pip install -r requirements.txt
 
-# copy entrypoint.sh
-COPY ./entrypoint.sh .
-RUN sed -i 's/\r$//g' /usr/src/app/entrypoint.sh
-RUN chmod +x /usr/src/app/entrypoint.sh
+# Copy the entrypoint script and fix line endings
+# COPY entrypoint.sh /usr/src/app/entrypoint.sh
+# RUN sed -i 's/\r$//' /usr/src/app/entrypoint.sh
+# RUN chmod +x /usr/src/app/entrypoint.sh
 
-# copy project
-COPY . .
+# Copy the project files
+COPY . /usr/src/app/
 
-# run entrypoint.sh
-ENTRYPOINT ["/usr/src/app/entrypoint.sh"]
+# Set the entrypoint
+# ENTRYPOINT ["/usr/src/app/entrypoint.sh"]
