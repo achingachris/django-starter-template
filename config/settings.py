@@ -100,11 +100,22 @@ WSGI_APPLICATION = "config.wsgi.application"
 #     },
 # }
 
+# DATABASES = {
+#     "default": {
+#         "ENGINE": "django.db.backends.sqlite3",
+#         "NAME": BASE_DIR / "db.sqlite3",
+#     },
+# }
+
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
-    },
+        "ENGINE": os.environ.get("DATABASE_ENGINE", "django.db.backends.sqlite3"),
+        "NAME": os.environ.get("PSQL_DATABASE", BASE_DIR / "db.sqlite3"),
+        "USER": os.environ.get("PSQL_USER", "user"),
+        "PASSWORD": os.environ.get("PSQL_PASSWORD", "password"),
+        "HOST": os.environ.get("PSQL_HOST", "localhost"),
+        "PORT": os.environ.get("PSQL_PORT", "5432"),
+    }
 }
 
 # Password validation
