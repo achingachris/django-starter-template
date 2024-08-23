@@ -188,8 +188,11 @@ CRISPY_TEMPLATE_PACK = "bootstrap5"
 # https://django-debug-toolbar.readthedocs.io/en/latest/installation.html
 # https://docs.djangoproject.com/en/dev/ref/settings/#internal-ips
 INTERNAL_IPS = ["127.0.0.1"]
-
+CSRF_TRUSTED_ORIGINS = ["http://localhost:1337"]
 
 # django-allauth config
 # https://docs.djangoproject.com/en/dev/ref/settings/#site-id
 SITE_ID = 1
+
+MEDIA_URL = "/media/"
+MEDIA_ROOT = BASE_DIR / "mediafiles"
