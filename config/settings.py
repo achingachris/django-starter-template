@@ -6,6 +6,7 @@ from logging.handlers import TimedRotatingFileHandler
 from pathlib import Path
 
 import sentry_sdk
+from dotenv import load_dotenv
 from decouple import Csv, config
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -17,15 +18,15 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = config("SECRET_KEY", default="hahaha_you_will_get_hacked_by_a_12_year_old")
 DEBUG = config("DEBUG", default=False, cast=bool)
-
-
-# ALLOWED_HOSTS = []
 ALLOWED_HOSTS = config(
     "ALLOWED_HOSTS", default="", cast=lambda v: [s.strip() for s in v.split(",")]
 )
 
-# Application definition
+# SECRET_KEY = os.getenv('SECRET_KEY')
+# DEBUG = os.getenv('DEBUG') == 'True'
+# ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS').split(',')
 
+# Application definition
 DEFAULT_APPS = [
     "django.contrib.admin",
     "django.contrib.auth",
@@ -91,18 +92,17 @@ WSGI_APPLICATION = "config.wsgi.application"
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 DATABASES = {
     "default": {
-        "ENGINE": config("DB_ENGINE", default="django.db.backends.sqlite3"),
-        "NAME": config("DB_NAME", default=BASE_DIR / "db.sqlite3"),
-        "USER": config("DB_USER", default=""),
-        "PASSWORD": config("DB_PASSWORD", default=""),
-        "HOST": config("DB_HOST", default=""),
-        "PORT": config("DB_PORT", default=""),
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": "djangostarter",
+        "USER": "postgres",
+        "PASSWORD": "postgres",
+        "HOST": "localhost",
+        "PORT": 5432,
     }
 }
 
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
-
 AUTH_PASSWORD_VALIDATORS = [
     {
         "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
@@ -121,7 +121,6 @@ AUTH_PASSWORD_VALIDATORS = [
 
 # Internationalization
 # https://docs.djangoproject.com/en/5.1/topics/i18n/
-
 LANGUAGE_CODE = "en-us"
 TIME_ZONE = "Africa/Nairobi"
 USE_I18N = True
@@ -178,6 +177,7 @@ CRISPY_TEMPLATE_PACK = "bootstrap5"
 # django-debug-toolbar
 # https://django-debug-toolbar.readthedocs.io/en/latest/installation.html
 # https://docs.djangoproject.com/en/dev/ref/settings/#internal-ips
+ENABLE_DEBUG_TOOLBAR = True
 INTERNAL_IPS = ["127.0.0.1"]
 CSRF_TRUSTED_ORIGINS = ["http://localhost:1337"]
 
@@ -187,9 +187,9 @@ SITE_ID = 1
 
 
 # CORS config
+# For API usage/linkag
 CORS_ORIGIN_WHITELIST = [
-    "http://localhost:3000",
-    "https://www.swahilipothub.co.ke",
+    "http://localhost:3000",  # frontend/client side url
 ]
 
 CORS_ALLOW_METHODS = [
