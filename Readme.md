@@ -19,3 +19,17 @@ To deactivate the environment, run:
 ```shell
 conda deactivate
 ```
+
+## Setting Up Pre-Commit Hooks
+
+Install Hooks:
+
+```bash
+pre-commit install
+```
+
+Update Hooks:
+
+```bash
+pre-commit autoupdate
+```
