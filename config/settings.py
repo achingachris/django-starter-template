@@ -6,25 +6,28 @@ from logging.handlers import TimedRotatingFileHandler
 from pathlib import Path
 
 import sentry_sdk
-from decouple import Csv, config
 from dotenv import load_dotenv
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+# Load environment variables from the .env file
+env_path = load_dotenv(os.path.join(BASE_DIR, ".env"))
+load_dotenv(env_path)
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
-
-SECRET_KEY = config("SECRET_KEY", default="hahaha_you_will_get_hacked_by_a_12_year_old")
-DEBUG = config("DEBUG", default=False, cast=bool)
-ALLOWED_HOSTS = config(
-    "ALLOWED_HOSTS", default="", cast=lambda v: [s.strip() for s in v.split(",")]
+SECRET_KEY = os.environ.get(
+    "PROJECT_SECRET_KEY",
+    "django-insecure-&psk#na5l=p3q8_a+-$4w1f^lt3lx1c@d*p4x$ymm_rn7pwb87",
 )
+DEBUG = os.environ.get("DJANGO_DEBUG")
+# Retrieve ALLOWED_HOSTS as a comma-separated string
+ALLOWED_HOSTS = os.environ.get("PROJECT_ALLOWED_HOSTS", "")
 
-# SECRET_KEY = os.getenv('SECRET_KEY')
-# DEBUG = os.getenv('DEBUG') == 'True'
-# ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS').split(',')
+# Split the string into a list of hosts, removing any empty strings caused by trailing commas
+ALLOWED_HOSTS = [host.strip() for host in ALLOWED_HOSTS.split(",") if host.strip()]
+
 
 # Application definition
 DEFAULT_APPS = [
@@ -92,12 +95,12 @@ WSGI_APPLICATION = "config.wsgi.application"
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.postgresql",
-        "NAME": "djangostarter",
-        "USER": "postgres",
-        "PASSWORD": "postgres",
-        "HOST": "localhost",
-        "PORT": 5432,
+        "ENGINE": os.environ.get("DB_ENGINE"),
+        "NAME": os.environ.get("DB_NAME"),
+        "USER": os.environ.get("DB_USER"),
+        "PASSWORD": os.environ.get("DB_PASSWORD"),
+        "HOST": os.environ.get("DB_HOST"),
+        "PORT": os.environ.get("DB_PORT"),
     }
 }
 
@@ -139,9 +142,6 @@ STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 # media
-# MEDIA_URL = "/media/"
-# MEDIA_ROOT = BASE_DIR / "mediafiles"
-# Media Settings
 MEDIA_URL = "/media/"
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 
@@ -211,7 +211,7 @@ CACHES = {
     }
 }
 
-SENTRY_DSN = config("SENTRY_DSN", default="")
+SENTRY_DSN = os.environ.get("SENTRY_DSN")
 
 sentry_sdk.init(
     dsn=SENTRY_DSN,
