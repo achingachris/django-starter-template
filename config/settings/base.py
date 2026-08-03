@@ -112,6 +112,22 @@ if ENABLE_DEBUG_TOOLBAR:
     except OSError as e:
         print(f"{e} while attempting to resolve system hostname. Using INTERNAL_IPS={INTERNAL_IPS}")
 
+    # `django-loginout-panel` adds a toolbar panel that toggles between the dev
+    # superuser and an anonymous session in one click. Its endpoints 404 unless
+    # DEBUG is on *and* the toolbar's show-callback passes, so it never exposes a
+    # passwordless login outside local development.
+    from debug_toolbar.settings import PANELS_DEFAULTS
+
+    INSTALLED_APPS.append("loginout_panel")
+    DEBUG_TOOLBAR_PANELS = ["loginout_panel.panel.LoginOutPanel", *PANELS_DEFAULTS]
+    # The account to log in as. Matched against CustomUser.USERNAME_FIELD, which
+    # is where `apps/web` runserver stores the dev superuser's email.
+    LOGINOUT_USERNAME = env("DEV_SUPERUSER_EMAIL", default="admin@example.com")
+    # Optional extra allowlist: restrict the endpoints to a single client IP.
+    # Left unset by default so the panel keeps working from a Docker gateway IP.
+    if env("LOGINOUT_SERVER", default=None):
+        LOGINOUT_SERVER = env("LOGINOUT_SERVER")
+
 # add browser reload only in debug mode
 if DEBUG:
     INSTALLED_APPS.append("django_browser_reload")

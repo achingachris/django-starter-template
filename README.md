@@ -82,6 +82,11 @@ Override via `DEV_SUPERUSER_EMAIL` / `DEV_SUPERUSER_PASSWORD` in `.env`. This on
 `DEBUG` is true, so production is never affected. You can still create more accounts with
 `make manage ARGS='createsuperuser'`.
 
+With `ENABLE_DEBUG_TOOLBAR=True`, the toolbar's **"Login / out"** panel
+([django-loginout-panel](https://github.com/andytwoods/django-loginout-panel)) toggles between this
+superuser and an anonymous session in one click — handy for checking logged-out views. Its endpoints
+are POST-only, CSRF-protected, and 404 unless `DEBUG` is on and the toolbar is visible.
+
 ### 3. Run the app (two processes)
 
 Local development needs **two terminals running simultaneously** — the Django server *and* the Vite
@@ -264,6 +269,7 @@ Configuration is read from environment variables (via `.env` locally). `make ini
 | `CELERY_TASK_ALWAYS_EAGER` | `= DEBUG` | Run tasks synchronously when true. |
 | `DEV_SUPERUSER_EMAIL` / `DEV_SUPERUSER_PASSWORD` | `admin@example.com` / `admin` | Auto-created dev superuser (DEBUG only). |
 | `ENABLE_DEBUG_TOOLBAR` | `False`¹ | Django Debug Toolbar (disabled during tests). |
+| `LOGINOUT_SERVER` | *(unset)* | Restrict the toolbar's "Login / out" panel to one client IP (optional). |
 | `EMAIL_BACKEND` | console backend | Email backend; configure a real one (e.g. Mailgun/Anymail) in production. |
 | `DJANGO_PORT` / `DJANGO_VITE_PORT` | `8000` / `5173` | Dev server ports. |
 | `POSTGRES_PORT` / `REDIS_PORT` | `5432` / `6379` | Docker service ports. |
