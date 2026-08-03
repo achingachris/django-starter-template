@@ -318,19 +318,30 @@ FORMS_URLFIELD_ASSUME_HTTPS = True
 SERVER_EMAIL = env("SERVER_EMAIL", default="noreply@localhost:8000")
 DEFAULT_FROM_EMAIL = env("DEFAULT_FROM_EMAIL", default="achinga.chris@gmail.com")
 
-# The default value will print emails to the console, but you can change that here
-# and in your environment.
-EMAIL_BACKEND = env("EMAIL_BACKEND", default="django.core.mail.backends.console.EmailBackend")
+# Outbound mail is sent over SMTP, defaulting to Resend (https://resend.com).
+#
+# In DEBUG, emails are printed to the terminal instead of being sent: local development needs
+# no credentials, and a stray password reset can never reach a real inbox. Everywhere else the
+# SMTP backend is used. Set EMAIL_BACKEND explicitly to override either default.
+EMAIL_BACKEND = env(
+    "EMAIL_BACKEND",
+    default=(
+        "django.core.mail.backends.console.EmailBackend" if DEBUG else "django.core.mail.backends.smtp.EmailBackend"
+    ),
+)
 
-# Most production backends will require further customization. The below example uses Mailgun.
-# ANYMAIL = {
-#     "MAILGUN_API_KEY": env("MAILGUN_API_KEY", default=None),
-#     "MAILGUN_SENDER_DOMAIN": env("MAILGUN_SENDER_DOMAIN", default=None),
-# }
-
-# use in production
-# see https://github.com/anymail/django-anymail for more details/examples
-# EMAIL_BACKEND = "anymail.backends.mailgun.EmailBackend"
+# Resend's SMTP endpoint expects the literal username "resend" and an API key ("re_...") as the
+# password. Any other SMTP provider works too — override the host/port/user in the environment.
+EMAIL_HOST = env("EMAIL_HOST", default="smtp.resend.com")
+EMAIL_PORT = env.int("EMAIL_PORT", default=587)
+EMAIL_HOST_USER = env("EMAIL_HOST_USER", default="resend")
+EMAIL_HOST_PASSWORD = env("EMAIL_HOST_PASSWORD", default=env("RESEND_API_KEY", default=""))
+# Port 587 uses STARTTLS. To use implicit TLS instead, set EMAIL_PORT=465 and EMAIL_USE_SSL=True;
+# EMAIL_USE_TLS then defaults to False, since Django rejects both being enabled at once.
+EMAIL_USE_SSL = env.bool("EMAIL_USE_SSL", default=False)
+EMAIL_USE_TLS = env.bool("EMAIL_USE_TLS", default=not EMAIL_USE_SSL)
+# Don't let a hanging SMTP connection tie up a request or worker indefinitely.
+EMAIL_TIMEOUT = env.int("EMAIL_TIMEOUT", default=10)
 
 EMAIL_SUBJECT_PREFIX = "[django-template] "
 
