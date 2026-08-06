@@ -54,15 +54,8 @@ USE_HTTPS_IN_ABSOLUTE_URLS = True
 # If you don't want to use environment variables to set production hosts you can add them here
 # ALLOWED_HOSTS = ["example.com"]
 
-# Your email config goes here.
-# see https://github.com/anymail/django-anymail for more details / examples
-# To use mailgun, uncomment the lines below and make sure your key and domain
-# are available in the environment.
-# EMAIL_BACKEND = "anymail.backends.mailgun.EmailBackend"
-
-# ANYMAIL = {
-#     "MAILGUN_API_KEY": env("MAILGUN_API_KEY", default=None),
-#     "MAILGUN_SENDER_DOMAIN": env("MAILGUN_SENDER_DOMAIN", default=None),
-# }
+# Email is configured in base.py: outside DEBUG it sends over SMTP via Resend, so all this
+# environment needs is RESEND_API_KEY (plus a DEFAULT_FROM_EMAIL on a verified domain).
+# Point EMAIL_HOST / EMAIL_PORT / EMAIL_HOST_USER at another provider to switch.
 
 ADMINS = ["achinga.chris@gmail.com"]

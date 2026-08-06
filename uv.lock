@@ -270,6 +270,7 @@ dependencies = [
 dev = [
     { name = "django-browser-reload" },
     { name = "django-debug-toolbar" },
+    { name = "django-loginout-panel" },
     { name = "django-stubs" },
     { name = "django-watchfiles" },
     { name = "djangorestframework-stubs" },
@@ -310,6 +311,7 @@ requires-dist = [
 dev = [
     { name = "django-browser-reload" },
     { name = "django-debug-toolbar" },
+    { name = "django-loginout-panel", specifier = ">=0.1.0" },
     { name = "django-stubs", specifier = ">=5.0.0" },
     { name = "django-watchfiles" },
     { name = "djangorestframework-stubs", specifier = ">=3.15.0" },
@@ -587,6 +589,19 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/34/f2/8c3e28a5eed8e5226835c762892bfef74eda7e8629c65b49c186098eb303/django_htmx-1.27.0.tar.gz", hash = "sha256:036e5da801bfdf5f1ca815f21592cfb9f004a898f330c842f15e55c70e301a75", size = 65362, upload-time = "2025-11-28T23:18:55.049Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/23/ac/25d28489dc43224e260f4ebee7565f7ef1efe12af0f284a89500c19f75e2/django_htmx-1.27.0-py3-none-any.whl", hash = "sha256:13e1e13b87d39b57f95aae6e4987cb3df056d0b1373a41f4a94504a00298ffd8", size = 62126, upload-time = "2025-11-28T23:18:53.57Z" },
+]
+
+[[package]]
+name = "django-loginout-panel"
+version = "0.1.0"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "django" },
+    { name = "django-debug-toolbar" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/d0/a5/c531c22f60a0cbd42a569c5a1cd658df71fc9879589de703f4c413a7a664/django_loginout_panel-0.1.0.tar.gz", hash = "sha256:e96db332fbd466a69324f38aff6f785d091ee6a39bdfe4784cb72d01f6f32f00", size = 9554, upload-time = "2026-07-03T09:36:08.847Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/8a/58/a7d3beb89923a8b12c78f94901b8d476a4e9b9bd509d9813e1052f04890f/django_loginout_panel-0.1.0-py3-none-any.whl", hash = "sha256:7ead4652b55230c75f5dd73f98d42a090a9cc1d666dc75a007e18e186cbc3060", size = 10962, upload-time = "2026-07-03T09:36:07.898Z" },
 ]
 
 [[package]]

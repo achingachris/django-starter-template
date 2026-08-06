@@ -87,6 +87,11 @@ Override via `DEV_SUPERUSER_EMAIL` / `DEV_SUPERUSER_PASSWORD` in `.env`. This on
 `DEBUG` is true, so production is never affected. You can still create more accounts with
 `make manage ARGS='createsuperuser'`.
 
+With `ENABLE_DEBUG_TOOLBAR=True`, the toolbar's **"Login / out"** panel
+([django-loginout-panel](https://github.com/andytwoods/django-loginout-panel)) toggles between this
+superuser and an anonymous session in one click — handy for checking logged-out views. Its endpoints
+are POST-only, CSRF-protected, and 404 unless `DEBUG` is on and the toolbar is visible.
+
 ### 3. Run the app (two processes)
 
 Local development needs **two terminals running simultaneously** — the Django server *and* the Vite
@@ -269,7 +274,10 @@ Configuration is read from environment variables (via `.env` locally). `make ini
 | `CELERY_TASK_ALWAYS_EAGER` | `= DEBUG` | Run tasks synchronously when true. |
 | `DEV_SUPERUSER_EMAIL` / `DEV_SUPERUSER_PASSWORD` | `admin@example.com` / `admin` | Auto-created dev superuser (DEBUG only). |
 | `ENABLE_DEBUG_TOOLBAR` | `False`¹ | Django Debug Toolbar (disabled during tests). |
-| `EMAIL_BACKEND` | console backend | Email backend; configure a real one (e.g. Mailgun/Anymail) in production. |
+| `LOGINOUT_SERVER` | *(unset)* | Restrict the toolbar's "Login / out" panel to one client IP (optional). |
+| `EMAIL_BACKEND` | console in `DEBUG`, else SMTP | Override to force a specific backend. |
+| `RESEND_API_KEY` | *(empty)* | Resend API key, used as the SMTP password. Required to send real mail. |
+| `EMAIL_HOST` / `EMAIL_PORT` / `EMAIL_HOST_USER` | `smtp.resend.com` / `587` / `resend` | Override to use another SMTP provider. |
 | `DJANGO_PORT` / `DJANGO_VITE_PORT` | `8000` / `5173` | Dev server ports. |
 | `POSTGRES_PORT` / `REDIS_PORT` | `5432` / `6379` | Docker service ports. |
 | `TURNSTILE_KEY` / `TURNSTILE_SECRET` | *(empty)* | Cloudflare Turnstile keys (optional). |
@@ -286,6 +294,19 @@ Configuration is read from environment variables (via `.env` locally). `make ini
 - `config.settings.prod` — imports everything from `base`, then forces `DEBUG=False`
   and enables the security hardening (SSL redirect, secure cookies, HSTS scaffolding, etc.). Select it
   in production via `DJANGO_SETTINGS_MODULE=config.settings.prod`.
+
+**Email:** in `DEBUG`, messages are printed to the terminal running `make start` — no credentials
+needed, and no chance of emailing a real person while developing. Outside `DEBUG`, mail is sent over
+SMTP via [Resend](https://resend.com); set `RESEND_API_KEY` and make sure `DEFAULT_FROM_EMAIL` is on
+a domain you've verified there. Any other SMTP provider works by overriding `EMAIL_HOST`,
+`EMAIL_PORT`, and `EMAIL_HOST_USER`. To check your setup:
+
+```bash
+make manage ARGS='send_test_email you@example.com'
+```
+
+To send real mail from local development, set `EMAIL_BACKEND="django.core.mail.backends.smtp.EmailBackend"`
+and `RESEND_API_KEY` in `.env`.
 
 ---
 
@@ -307,7 +328,8 @@ make setup-env-prod    # copies .env.prod.example -> .env.prod (git-ignored)
 
 Edit `.env.prod` and set real values — at minimum `SECRET_KEY`, `ALLOWED_HOSTS`,
 `POSTGRES_PASSWORD` / `DATABASE_URL`, and `REDIS_URL`. `DEBUG=False` is required (see the notes in
-the file). For real email, configure `EMAIL_BACKEND` and its credentials (e.g. Mailgun via Anymail).
+the file). For email, set `RESEND_API_KEY` and point `DEFAULT_FROM_EMAIL` / `SERVER_EMAIL` at a
+domain verified in Resend.
 
 ### 2. Build and run
 
