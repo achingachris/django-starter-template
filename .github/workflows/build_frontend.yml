@@ -4,6 +4,10 @@ on:
   push:
     branches:
       - main
+# Cancel superseded runs when new commits are pushed to the same branch/PR.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}
+  cancel-in-progress: true
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -11,7 +15,7 @@ jobs:
       matrix:
         node-version: [24.x]
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v4
         with:

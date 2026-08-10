@@ -48,8 +48,8 @@ migrations: ## Create DB migrations
 migrate: ## Run DB migrations
 	@uv run python manage.py migrate
 
-test: ## Run Django tests
-	@uv run python manage.py test ${ARGS}
+test: ## Run Django tests (uses config/settings/test.py)
+	@uv run python manage.py test --settings=config.settings.test ${ARGS}
 
 celery: ## Run a Celery worker with beat (requires a running Redis broker)
 	@uv run celery -A config worker -l INFO --beat --pool=solo

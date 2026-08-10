@@ -1,9 +1,8 @@
 {% extends "web/app/app_base.html" %}
 
 {% block page_title %}
-{% block head_title %}{% endblock %}
+  {% block head_title %}{% endblock %}
 {% endblock %}
-
 {% block sidebar-nav %}
   {% with 'profile' as active_tab %}
     {{ block.super }}
