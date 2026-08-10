@@ -34,7 +34,9 @@ repos:
   - repo: https://github.com/djlint/djLint
     rev: v1.44.2
     hooks:
+      # HTML email markup is whitespace-fragile (Outlook/MSO conditionals) and requires
+      # inline style attributes (H021), so both djLint hooks skip templates/account/email/.
       - id: djlint-reformat-django
+        exclude: ^templates/account/email/
       - id: djlint-django
-        # HTML emails require inline style attributes (H021), so skip linting them.
         exclude: ^templates/account/email/

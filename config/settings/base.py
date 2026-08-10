@@ -321,9 +321,6 @@ DJANGO_VITE = {
 # change this to BigAutoField if you"re sure you want to use it and aren"t worried about migrations.
 DEFAULT_AUTO_FIELD = "django.db.models.AutoField"
 
-# Removes deprecation warning for future compatibility.
-# see https://adamj.eu/tech/2023/12/07/django-fix-urlfield-assume-scheme-warnings/ for details.
-
 # Email setup
 
 # default email used by your server

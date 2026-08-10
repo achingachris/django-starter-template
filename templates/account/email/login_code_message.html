@@ -1,7 +1,5 @@
 {% extends 'account/email/email_template_base.html' %}
-
 {% load i18n %}
-
 {% block message_body %}
   <p>
     {% blocktranslate trimmed with site_name=current_site.name %}
