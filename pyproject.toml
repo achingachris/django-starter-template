@@ -81,7 +81,7 @@ dependencies = [
     "celery",
     "celery-progress",
     "celery[redis]",
-    "django-allauth[socialaccount]>=65.13.0",
+    "django-allauth[socialaccount]>=65.19.0",
     "django-anymail[mailgun]", # email services
     "django-celery-beat",
     "django-environ",
