@@ -38,6 +38,7 @@ module = [
     "environ.*",
     "kombu.*",
     "mailchimp3.*",
+    "sentry_sdk.*",
 ]
 ignore_missing_imports = true
 
@@ -52,6 +53,19 @@ disable_error_code = ["attr-defined", "assignment"]
 [tool.django-stubs]
 django_settings_module = "config.settings.dev"
 
+# djLint checks/formats the Django templates (run via pre-commit).
+[tool.djlint]
+blank_line_after_tag = "load,extends"
+close_void_tags = true
+# allauth's {% element %} / {% slot %} block tags (templates/allauth/elements/) are
+# unknown to djLint; without this it reports their end tags as unmatched (T038).
+custom_blocks = "element,slot"
+ignore = "H006,H030,H031"
+include = "H017,H035"
+indent = 2
+max_line_length = 120
+profile = "django"
+
 [tool.setuptools]
 py-modules = []
 
@@ -63,6 +77,7 @@ readme = "README.md"
 requires-python = ">=3.14"
 dependencies = [
     "Django>=6.0",
+    "argon2-cffi>=25.1.0",
     "celery",
     "celery-progress",
     "celery[redis]",
@@ -98,5 +113,6 @@ dev = [
 prod = [
     "gunicorn",
     "psycopg[c]",
+    "sentry-sdk>=2.67.1",
     "whitenoise>=6.12.0",
 ]

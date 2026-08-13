@@ -1,29 +1,29 @@
 {% extends "web/base.html" %}
+
 {% load i18n %}
 {% load static %}
 {% load form_tags %}
+
 {% block body %}
   <div class="flex justify-center my-8">
     <div class="w-96 max-w-full px-4 py-4 card bg-base-100 border border-base-300">
       <div class="card-body">
-        <h2 class="text-center text-2xl font-bold">
-          {% translate "Sign In" %}
-        </h2>
+        <h2 class="text-center text-2xl font-bold">{% translate "Sign In" %}</h2>
         <form class="mt-6 space-y-6" method="post">
           {% csrf_token %}
           {{ form.non_field_errors }}
           {% render_field form.login %}
           {% render_field form.password %}
           <div>
-            <input class="btn btn-primary btn-block" type="submit" value="{% translate "Sign In" %}">
+            <input class="btn btn-primary btn-block"
+                   type="submit"
+                   value="{% translate "Sign In" %}" />
           </div>
         </form>
         {% if LOGIN_BY_CODE_ENABLED %}
-        <p class="pg-text-centered pg-text-muted">
-          <a class="text-sm muted-link" href="{{ request_login_code_url }}">
-            {% translate "Mail me a sign-in code" %}
-          </a>
-        </p>
+          <p class="pg-text-centered pg-text-muted">
+            <a class="text-sm muted-link" href="{{ request_login_code_url }}">{% translate "Mail me a sign-in code" %}</a>
+          </p>
         {% endif %}
       </div>
     </div>

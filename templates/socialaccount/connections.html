@@ -1,6 +1,10 @@
 {% extends "web/app/app_base.html" %}
+
 {% load i18n %}
-{% block page_title %}{% translate "Account Connections" %}{% endblock %}
+
+{% block page_title %}
+  {% translate "Account Connections" %}
+{% endblock %}
 {% block sidebar-nav %}
   {% with 'profile' as active_tab %}
     {{ block.super }}
@@ -16,7 +20,9 @@
           You can sign in to your account using any of the following third party accounts:
         {% endblocktranslate %}
       </p>
-      <form class="my-2" method="post" action="{% url 'socialaccount_connections' %}">
+      <form class="my-2"
+            method="post"
+            action="{% url 'socialaccount_connections' %}">
         {% csrf_token %}
         <fieldset>
           {% if form.non_field_errors %}
@@ -26,7 +32,10 @@
             {% with base_account.get_provider_account as account %}
               <div>
                 <label class="block font-bold" for="id_account_{{ base_account.id }}">
-                  <input id="id_account_{{ base_account.id }}" type="radio" name="account" value="{{ base_account.id }}"/>
+                  <input id="id_account_{{ base_account.id }}"
+                         type="radio"
+                         name="account"
+                         value="{{ base_account.id }}" />
                   <span class="socialaccount_provider {{ base_account.provider }} {{ account.get_brand.id }}">{{ account.get_brand.name }}</span>
                   {{ account }}
                 </label>
@@ -36,7 +45,7 @@
           <button type="submit" class="btn btn-outline btn-error mt-2">{% translate 'Remove' %}</button>
         </fieldset>
       </form>
-      <hr>
+      <hr />
     {% else %}
       <p>{% translate 'You currently have no social network accounts connected to this account.' %}</p>
     {% endif %}

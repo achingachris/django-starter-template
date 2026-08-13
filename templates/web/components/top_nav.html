@@ -1,18 +1,28 @@
 {% load i18n %}
+
 <div class="sticky top-0 z-50 bg-base-100/80 backdrop-blur-lg border-b border-base-300"
      x-data="{ mobileMenuOpen: false }">
   <div class="navbar">
     <div class="navbar-start">
       <div class="lg:hidden">
         <button @click="mobileMenuOpen = true" class="btn btn-ghost">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" width="24" height="24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h8m-8 6h16" /></svg>
+          <svg xmlns="http://www.w3.org/2000/svg"
+               class="h-5 w-5"
+               fill="none"
+               viewBox="0 0 24 24"
+               stroke="currentColor"
+               width="24"
+               height="24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h8m-8 6h16" />
+          </svg>
         </button>
       </div>
     </div>
     <div class="navbar-center hidden lg:flex">
       <div role="tablist" class="tabs p-0">
-        <a class="tab {% if request.path == '/' %}tab-active{% endif %}" href="{% url 'web:home' %}">
-          <div>{{project_meta.NAME}}</div>
+        <a class="tab {% if request.path == '/' %}tab-active{% endif %}"
+           href="{% url 'web:home' %}">
+          <div>{{ project_meta.NAME }}</div>
         </a>
       </div>
     </div>
@@ -23,12 +33,8 @@
       </button>
       {% if user.is_authenticated %}
       {% else %}
-      <a href="{% url 'account_signup' %}" class="btn btn-primary">
-        {% translate "Sign Up" %}
-      </a>
-      <a href="{% url 'account_login' %}" class="btn btn-outline ml-2">
-        {% translate "Sign In" %}
-      </a>
+        <a href="{% url 'account_signup' %}" class="btn btn-primary">{% translate "Sign Up" %}</a>
+        <a href="{% url 'account_login' %}" class="btn btn-outline ml-2">{% translate "Sign In" %}</a>
       {% endif %}
     </div>
   </div>
@@ -55,18 +61,23 @@
         <div class="flex items-center justify-between p-4 border-b border-base-200">
           <span class="font-semibold text-lg">{{ project_meta.NAME }}</span>
           <button @click="mobileMenuOpen = false" class="btn btn-ghost btn-sm">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <svg xmlns="http://www.w3.org/2000/svg"
+                 class="h-5 w-5"
+                 fill="none"
+                 viewBox="0 0 24 24"
+                 stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
             </svg>
           </button>
         </div>
         <ul class="menu p-4">
           {% block mobile_nav %}
-          <li>
-            <a class="{% if request.path == '/' %}active{% endif %}" href="{% url 'web:home' %}">
-              <div>{{project_meta.NAME}}</div>
-            </a>
-          </li>
+            <li>
+              <a class="{% if request.path == '/' %}active{% endif %}"
+                 href="{% url 'web:home' %}">
+                <div>{{ project_meta.NAME }}</div>
+              </a>
+            </li>
           {% endblock %}
         </ul>
       </div>

@@ -194,6 +194,19 @@ AUTH_USER_MODEL = "users.CustomUser"
 LOGIN_URL = "account_login"
 LOGIN_REDIRECT_URL = "/"
 
+# Path prefix for the Django admin (must end in a slash). Override it in the environment
+# (e.g. ADMIN_URL="manage-xyz/") to move the admin off /admin/ and cut automated scanning noise.
+ADMIN_URL = env("ADMIN_URL", default="admin/")
+
+# Argon2 is Django's recommended password hasher. Keeping PBKDF2 & co. in the list means
+# existing password hashes still verify and are upgraded to Argon2 on each user's next login.
+PASSWORD_HASHERS = [
+    "django.contrib.auth.hashers.Argon2PasswordHasher",
+    "django.contrib.auth.hashers.PBKDF2PasswordHasher",
+    "django.contrib.auth.hashers.PBKDF2SHA1PasswordHasher",
+    "django.contrib.auth.hashers.BCryptSHA256PasswordHasher",
+]
+
 # Password validation
 # https://docs.djangoproject.com/en/stable/ref/settings/#auth-password-validators
 
@@ -308,10 +321,6 @@ DJANGO_VITE = {
 # change this to BigAutoField if you"re sure you want to use it and aren"t worried about migrations.
 DEFAULT_AUTO_FIELD = "django.db.models.AutoField"
 
-# Removes deprecation warning for future compatibility.
-# see https://adamj.eu/tech/2023/12/07/django-fix-urlfield-assume-scheme-warnings/ for details.
-FORMS_URLFIELD_ASSUME_HTTPS = True
-
 # Email setup
 
 # default email used by your server
@@ -391,6 +400,23 @@ CACHES = {
 
 CELERY_BROKER_URL = CELERY_RESULT_BACKEND = REDIS_URL
 CELERY_BEAT_SCHEDULER = "django_celery_beat.schedulers:DatabaseScheduler"
+
+CELERY_TIMEZONE = TIME_ZONE
+CELERY_ACCEPT_CONTENT = ["json"]
+CELERY_TASK_SERIALIZER = "json"
+CELERY_RESULT_SERIALIZER = "json"
+# Kill runaway tasks instead of letting them hold a worker forever: SoftTimeLimitExceeded is
+# raised at 4 minutes so a task can clean up, the hard limit kills it at 5. Tasks that
+# legitimately run longer should set their own limits via @shared_task(time_limit=...).
+CELERY_TASK_SOFT_TIME_LIMIT = 4 * 60
+CELERY_TASK_TIME_LIMIT = 5 * 60
+# Store task name/args on results, and retry storing results if the backend hiccups.
+CELERY_RESULT_EXTENDED = True
+CELERY_RESULT_BACKEND_ALWAYS_RETRY = True
+CELERY_RESULT_BACKEND_MAX_RETRIES = 10
+# Emit worker/task events so monitoring tools (e.g. Flower) can observe the queue.
+CELERY_WORKER_SEND_TASK_EVENTS = True
+CELERY_TASK_SEND_SENT_EVENT = True
 
 # Run tasks synchronously when there's no broker available (e.g. native local dev without Redis).
 # Defaults to eager in DEBUG so the app works out of the box; production (DEBUG=False) uses the broker.

@@ -1,14 +1,16 @@
 {% extends "web/app/app_base.html" %}
+
 {% load static %}
 {% load django_vite %}
+
 {% block app %}
-<section class="app-card">
-  {% include 'account/components/profile_form.html' %}
-</section>
+  <section class="app-card">
+    {% include 'account/components/profile_form.html' %}
+  </section>
 {% endblock %}
 {% block page_js %}
-{% vite_asset 'assets/javascript/app.js' %}
-<script>
+  {% vite_asset 'assets/javascript/app.js' %}
+  <script>
   document.addEventListener('DOMContentLoaded', () => {
     const App = SiteJS.app;
     const uploadUrl = '{% url "users:upload_profile_image" %}';
@@ -38,7 +40,7 @@
       uploadlabel.innerHTML = '<span class="w-6 h-6 inline-flex justify-center items-center"><i class="fa fa-refresh"></i></span><span>Uploading...</span>';
       uploadlabel.classList.add('is-active');
       function showError(message) {
-        uploadlabel.innerHTML = '<span title="' + message + '" ><span class="w-6 h-6 inline-flex justify-center items-center"><i class="fa fa-times"></i></span><span>Upload failed!</span></span>';
+        uploadlabel.innerHTML = '<span title="' + message + '"><span class="w-6 h-6 inline-flex justify-center items-center"><i class="fa fa-times"></i></span><span>Upload failed!</span></span>';
         uploadlabel.classList.remove('is-active');
         uploadlabel.classList.add('text-error');
       }
@@ -81,5 +83,5 @@
       });
     }
   });
-</script>
+  </script>
 {% endblock %}
