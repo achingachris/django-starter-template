@@ -162,8 +162,6 @@ TEMPLATES = [
                 "django.contrib.messages.context_processors.messages",
                 "apps.web.context_processors.project_meta",
                 "apps.web.context_processors.csrf_settings",
-                # this line can be removed if not using google analytics
-                "apps.web.context_processors.google_analytics_id",
             ],
             "loaders": _DEFAULT_LOADERS if DEBUG else _CACHED_LOADERS,
         },
@@ -438,10 +436,10 @@ SCHEDULED_TASKS: dict[str, Any] = {
 
 # replace any values below with specifics for your project
 PROJECT_METADATA = {
-    "NAME": gettext_lazy("django-template"),
+    "NAME": gettext_lazy("django-starter"),
     "URL": "http://localhost:8000",
-    "DESCRIPTION": gettext_lazy("my django template"),  # noqa: E501
-    "IMAGE": "https://upload.wikimedia.org/wikipedia/commons/2/20/PEO-pegasus_black.svg",
+    "DESCRIPTION": gettext_lazy("Django Starter Project Template"),  # noqa: E501
+    "IMAGE": "images/web/cdc_logo.jpg",
     "KEYWORDS": "SaaS, django",
     "CONTACT_EMAIL": "achinga.chris@gmail.com",
 }
@@ -451,8 +449,9 @@ USE_HTTPS_IN_ABSOLUTE_URLS = env.bool("USE_HTTPS_IN_ABSOLUTE_URLS", default=Fals
 
 ADMINS = ["achinga.chris@gmail.com"]
 
-# Add your google analytics ID to the environment to connect to Google Analytics
-GOOGLE_ANALYTICS_ID = env("GOOGLE_ANALYTICS_ID", default="")
+# Umami website ID used by the shared site analytics script.
+UMAMI_WEBSITE_ID = env("UMAMI_WEBSITE_ID", default="")
+
 
 
 LOGGING = {

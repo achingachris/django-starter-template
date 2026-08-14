@@ -280,8 +280,8 @@ Configuration is read from environment variables (via `.env` locally). `make ini
 | `EMAIL_HOST` / `EMAIL_PORT` / `EMAIL_HOST_USER` | `smtp.resend.com` / `587` / `resend` | Override to use another SMTP provider. |
 | `DJANGO_PORT` / `DJANGO_VITE_PORT` | `8000` / `5173` | Dev server ports. |
 | `POSTGRES_PORT` / `REDIS_PORT` | `5432` / `6379` | Docker service ports. |
+| `UMAMI_WEBSITE_ID` | *(empty)* | Umami website ID for site analytics (optional). |
 | `TURNSTILE_KEY` / `TURNSTILE_SECRET` | *(empty)* | Cloudflare Turnstile keys (optional). |
-| `GOOGLE_ANALYTICS_ID` | *(empty)* | GA measurement ID (optional). |
 
 ¹ `.env.example` ships with `ENABLE_DEBUG_TOOLBAR=True` for convenience.
 

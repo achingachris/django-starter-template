@@ -48,8 +48,10 @@
           href="{% vite_asset_url 'assets/styles/site-base.css' %}" />
     <link rel="stylesheet"
           href="{% vite_asset_url 'assets/styles/site-tailwind.css' %}" />
-    {% if GOOGLE_ANALYTICS_ID %}
-      {% include 'web/components/google_analytics.html' %}
+    {% if umami_website_id %}
+      <script defer
+              src="https://analytics.chrisdevcode.com/script.js"
+              data-website-id="{{ umami_website_id }}"></script>
     {% endif %}
     {% vite_asset 'assets/javascript/site.js' %}
     {% vite_hmr_client %}
