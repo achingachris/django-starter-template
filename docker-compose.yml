@@ -1,54 +1,58 @@
-# Production stack: Postgres + Redis + gunicorn web + Celery worker/beat.
+# Production stack for both local Docker Compose and Dokploy.
 #
-# Configure secrets in .env.prod (copy from .env.prod.example). The web and celery
-# services share a single production image built from ./Dockerfile and run with
-# DJANGO_SETTINGS_MODULE=config.settings.prod (DEBUG=False, WhiteNoise static, security headers).
+# Local commands use .env.prod and publish the web service on localhost:8000.
+# Dokploy sets APP_ENV_FILE=./.env and WEB_PUBLISHED_PORT=0; Traefik reaches
+# the web service over the internal Docker network.
+x-app: &app
+  build:
+    context: .
+    dockerfile: Dockerfile
+    args:
+      MY_UID: ${MY_UID:-1000}
+      MY_GID: ${MY_GID:-1000}
+  image: django-starter-app:latest
+  env_file:
+    - ${APP_ENV_FILE:-./.env.prod}
+  restart: unless-stopped
+
 services:
   db:
     image: postgres:17
-    # POSTGRES_DB / POSTGRES_USER / POSTGRES_PASSWORD are read from .env.prod.
     env_file:
-      - ./.env.prod
+      - ${APP_ENV_FILE:-./.env.prod}
     volumes:
       - postgres_data:/var/lib/postgresql/data/
     healthcheck:
       test: pg_isready -d $${POSTGRES_DB} -U $${POSTGRES_USER}
       interval: 5s
+      timeout: 5s
       retries: 10
     restart: unless-stopped
 
   redis:
     image: redis:7
-    # persistent storage
     command: redis-server --appendonly yes
     volumes:
       - redis_data:/data
     healthcheck:
       test: ["CMD", "redis-cli", "ping"]
       interval: 5s
+      timeout: 5s
       retries: 10
     restart: unless-stopped
 
   web:
-    build:
-      context: .
-      dockerfile: Dockerfile
-      args:
-        MY_UID: ${MY_UID:-1000}
-        MY_GID: ${MY_GID:-1000}
-    image: django-template:latest
-    # Apply migrations and gather static files, then serve via gunicorn.
-    command: >
-      bash -c "python manage.py migrate --noinput &&
-               python manage.py collectstatic --noinput &&
-               exec gunicorn config.wsgi:application
-                 --bind 0.0.0.0:8000
-                 --workers $${GUNICORN_WORKERS:-3}
-                 --access-logfile - --error-logfile -"
-    env_file:
-      - ./.env.prod
+    <<: *app
+    command:
+      - bash
+      - -c
+      - >-
+        python manage.py migrate --noinput &&
+        python manage.py collectstatic --noinput &&
+        exec gunicorn config.wsgi:application --bind 0.0.0.0:8000
+        --workers $${GUNICORN_WORKERS:-3} --access-logfile - --error-logfile -
     ports:
-      - "8000:8000"
+      - "127.0.0.1:${WEB_PUBLISHED_PORT:-8000}:8000"
     volumes:
       - media_files:/code/media
     depends_on:
@@ -56,20 +60,10 @@ services:
         condition: service_healthy
       redis:
         condition: service_healthy
-    restart: unless-stopped
 
   celery:
-    # Same production image as `web` (shared build cache / tag).
-    build:
-      context: .
-      dockerfile: Dockerfile
-      args:
-        MY_UID: ${MY_UID:-1000}
-        MY_GID: ${MY_GID:-1000}
-    image: django-template:latest
+    <<: *app
     command: celery -A config worker --beat -l INFO
-    env_file:
-      - ./.env.prod
     volumes:
       - media_files:/code/media
     depends_on:
@@ -79,7 +73,6 @@ services:
         condition: service_healthy
       web:
         condition: service_started
-    restart: unless-stopped
 
 volumes:
   postgres_data:
